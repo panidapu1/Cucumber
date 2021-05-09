@@ -7,10 +7,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.commons.lang3.StringUtils;
 
@@ -91,11 +95,23 @@ public class ExcelWriteDataToFile {
     	}
     	rowCount = rowCount + 1;
     	Row rowcol = sheet.createRow(rowCount);
-    	
+    	CellStyle style=workbook.createCellStyle();
+    	XSSFFont font= (XSSFFont) workbook.createFont();
+    	font.setBold(true);
+        font.setItalic(false);
+        // Setting font to style
+        style.setFont(font);
+        style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+	    style.setFillPattern(CellStyle.BRICKS);
+    	    
     	for(int j=0; j< columns.size(); j++ ) {
 			sheet.autoSizeColumn(rowCount);
 			Cell cell = rowcol.createCell(j);
 			cell.setCellValue(columns.get(j).toString());
+			if (columns.get(j).toString().contains(".txt"))
+			{
+				cell.setCellStyle(style);
+			}
 		}
     	FileOutputStream outputStream = new FileOutputStream(file);
     	workbook.write(outputStream);
